@@ -1,0 +1,18 @@
+<div class="card mb-3" style="width: 22rem;" >
+  <div class="row" (click)="onClick()" style="cursor: pointer;">
+    <div class="col-md-8">
+      <div class="m-2" >
+          <h6 class="card-title">{{recipe.name}}</h6>
+          <hr/>
+          <p class="card-text">{{recipe.description}}</p>
+      </div>  
+      
+    </div>
+    <div class="col-md-4">
+        <picture>
+            <img class=" img-fluid" [src]="recipe.imagePath" alt="Card image cap">
+        </picture>
+    </div>
+  </div>
+ 
+</div>

@@ -1,0 +1,16 @@
+
+<app-header 
+(tabSelected)="onTabSelected($event)">
+  
+</app-header>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-12">
+          <app-recipes *ngIf="loadedFeature === 'recipe'"></app-recipes>
+          <app-shopping-list *ngIf="loadedFeature !== 'recipe'"></app-shopping-list>
+      </div>
+  </div>
+</div>
+
+<app-example></app-example>

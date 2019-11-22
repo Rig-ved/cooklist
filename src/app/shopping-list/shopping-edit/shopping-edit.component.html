@@ -1,0 +1,28 @@
+<div class="">
+  <div class="col md-12">
+    <form action="">
+      <div class="row">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" class="form-control" placeholder="name" #nameInput>
+        </div>
+        <div class="form-group ml-2">
+            <label for="number">Amount:</label>
+            <input type="number" id="amount" class="form-control" placeholder="How much" #amountInput>
+        </div>
+        <div class="form-group ml-2">
+            <label for="unit">Unit:</label>
+            <input type="text" id="unit" class="form-control" placeholder="Unit" #unitInput>
+        </div>
+
+      </div>
+      <div class="">
+        <div class="row">
+          <button class="btn btn-primary" (click)="onAdd()">Add</button>
+          <button class="btn btn-danger ml-2" (click)="onDelete()">Delete</button>
+          <button class="btn btn-warning ml-2" (click)="onClear()">Clear</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
