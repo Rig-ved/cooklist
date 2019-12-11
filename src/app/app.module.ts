@@ -14,15 +14,18 @@ import { BetterHighlightDirective } from './shared/better-highlight.directive';
 import { UnlessDirective } from './shared/unless.directive';
 import { ExampleComponent } from './example/example.component';
 import { shoppingListService } from './shared/shopping-list.service';
-import { RouterModule, Routes } from '@angular/router';
+import { AppRoutingModule } from './app-routing.module';
+import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.component';
+import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
+import { RecipeDetailResolver } from './recipes/recipe-detail/recipe-detail.resolver';
+import { RecipeService } from './shared/recipes.services';
 
+// // const routes: Routes = [
+// // 	{ path: 'routePath', component: Component },
+// // 	{ path: '**', pathMatch: 'full', redirectTo: 'routePath' }
+// // ];
 
-xonst routes: Routes = [
-	{ path: 'routePath', component: Component },
-	{ path: '**', pathMatch: 'full', redirectTo: 'routePath' }
-];
-
-export const appRouting = RouterModule.forRoot(routes);
+// export const appRouting = RouterModule.forRoot(routes);
 
 @NgModule({
 	declarations: [
@@ -36,15 +39,18 @@ export const appRouting = RouterModule.forRoot(routes);
 		ShoppingEditComponent,
 		BetterHighlightDirective,
 		UnlessDirective,
-		ExampleComponent
+		ExampleComponent,
+		RecipeStartComponent,
+		RecipeEditComponent
 	],
 	imports: [
 		BrowserModule,
 		FormsModule,
 		BrowserAnimationsModule,
-		NoopAnimationsModule
+		NoopAnimationsModule,
+		AppRoutingModule
 	],
-	providers: [shoppingListService],
+	providers: [shoppingListService,RecipeService,RecipeDetailResolver],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }

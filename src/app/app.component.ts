@@ -11,8 +11,5 @@ export class AppComponent {
 
   constructor() { }
 
-  onTabSelected(data: string) {
-    if (data)
-      this.loadedFeature = data;
-  }
+ 
 }

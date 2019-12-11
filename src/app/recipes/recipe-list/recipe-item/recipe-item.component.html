@@ -1,5 +1,5 @@
-<div class="card mb-3" style="width: 22rem;" >
-  <div class="row" (click)="onClick()" style="cursor: pointer;">
+<a class="list-group-item list-group-item-action mb-3" style="width: 22rem;" [routerLink]="[index]" routerLinkActive="active" >
+  <div class="row" style="cursor: pointer;">
     <div class="col-md-8">
       <div class="m-2" >
           <h6 class="card-title">{{recipe.name}}</h6>
@@ -10,9 +10,9 @@
     </div>
     <div class="col-md-4">
         <picture>
-            <img class=" img-fluid" [src]="recipe.imagePath" alt="Card image cap">
+            <img class="img-fluid" [src]="recipe.imagePath" alt="Card image cap">
         </picture>
     </div>
   </div>
  
-</div>
+</a>

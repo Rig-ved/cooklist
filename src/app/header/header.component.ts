@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -6,17 +6,11 @@ import { Component, OnInit, EventEmitter, Output, ViewChild, ElementRef } from '
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  @Output() tabSelected = new EventEmitter<string>();
-  @ViewChild('tabSelect') tabSelect: ElementRef
   constructor() { }
 
   ngOnInit() {
   }
 
-  onClickTabs(tab:string,event) {
-    
-    event.target.classList.add('active')
-    this.tabSelected.emit(tab)
-  }
+  
 
 }

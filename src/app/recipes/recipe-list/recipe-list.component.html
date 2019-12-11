@@ -1,15 +1,15 @@
 <div class="row mt-3">
   <div class="col-md-12">
-    <button class="btn btn-primary">Add New Recipe</button>
+    <button class="btn btn-primary" (click)="onNewRecipeClick()">Add New Recipe</button>
   </div>
 </div>
 <hr />
 <div class="row">
   <div class="col-md-12">
     <app-recipe-item
-      *ngFor="let item of recipes"
+      *ngFor="let item of recipes;let i = index"
       [recipe]="item"
-     
+      [index]="i+1"
     >
     </app-recipe-item>
   </div>
