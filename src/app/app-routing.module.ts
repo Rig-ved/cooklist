@@ -6,16 +6,19 @@ import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.compon
 import { RecipeDetailComponent } from './recipes/recipe-detail/recipe-detail.component';
 import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
 import { RecipeDetailResolver } from './recipes/recipe-detail/recipe-detail.resolver';
+import { AuthComponent } from './auth/auth/auth.component';
+
 
 
 const appRoutes:Routes = [
+
     {path:'',redirectTo:'/recipes',pathMatch:'full'},
+    {path:'authenticate',component:AuthComponent,data: {background: '/assets/images/background.jpg'}},
     {path:'recipes',component:RecipesComponent,children:[
         {path:'',component:RecipeStartComponent},
         {path:'new',component:RecipeEditComponent},
-        {path:':id',component:RecipeDetailComponent,resolve:{detail:RecipeDetailResolver}},
-       
-        {path:':id/edit',component:RecipeEditComponent}
+        {path:':id',component:RecipeDetailComponent,resolve:[RecipeDetailResolver]},
+        {path:':id/edit',component:RecipeEditComponent,resolve:[RecipeDetailResolver]}
         
     ]},
     {path:'shopping-list',component:ShoppingListComponent},

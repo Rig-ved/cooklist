@@ -1,0 +1,58 @@
+<div class="container mt-5">
+	<div class="justify-content-center h-100">
+		<div class="card">
+			<div class="card-header bg-primary text-light">
+				<h3>Login</h3>
+			</div>
+			<div class="card-body">
+				<form (ngSubmit)="onAuthFormSubmit(f,loginMode)" #f="ngForm" autocomplete="off">
+					<div class="input-group form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fa fa-user"></i></span>
+						</div>
+						<input 
+						type="email" 
+						id="email"
+						name="username"
+						class="form-control" 
+						placeholder="username"
+						required
+						ngModel
+						#username="ngModel"
+						email	
+						>
+					</div>
+					<div class="form-group" *ngIf="!username.valid && username.touched">
+						<small class="" ><i>**Email is not valid</i></small>
+					</div>	
+					<div class="input-group form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fa fa-key"></i></span>
+						</div>
+						<input type="password" 
+						class="form-control" 
+						placeholder="password"
+						name="password"
+						ngModel
+						required
+						minlength="6">
+					</div>
+
+					<div class="remember">
+						<input type="checkbox"  name="remember" id="remember">
+						<label class="ml-2" for="remember">Remember Me</label>
+					</div>
+					<div class="form-group">
+						<button id="login"  type="submit" [disabled]="!f.valid"  (click)="valuesClick($event)" value="Login" class="btn float-right btn-primary">Login</button>
+						<button id="signup" type="submit" [disabled]="!f.valid"  (click)="valuesClick($event)" value="Sign Up" class="btn mr-3 float-right btn-success">Sign up</button>
+					</div>
+				</form>
+			</div>
+			<div class="card-footer">
+				<div class="d-flex justify-content-center links">
+					<a href="#" class="ml-2">Forgot your password?</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

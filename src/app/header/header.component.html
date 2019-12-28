@@ -11,6 +11,10 @@
         <li class="nav-item">
           <a class="nav-link" [routerLink]="['shopping-list']" routerLinkActive="active" >Shopping List</a>
         </li>
+
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['authenticate']" routerLinkActive="active" >Authenticate</a>
+        </li>
        <!--  <li class="nav-item">
           <a class="nav-link" href="#">Pricing</a>
         </li> -->
@@ -19,8 +23,8 @@
             Manage
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <a class="dropdown-item" style="cursor:pointer">Save Data</a>
-            <a class="dropdown-item" style="cursor:pointer">Fetch Data</a>
+            <a class="dropdown-item" style="cursor:pointer" (click)="onSaveDataToDB()">Save Data</a>
+            <a class="dropdown-item" style="cursor:pointer" (click)="fetchRecipesFromDB()">Fetch Data</a>
           </div>
         </li>
       </ul>

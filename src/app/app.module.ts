@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -19,6 +21,9 @@ import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.compon
 import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
 import { RecipeDetailResolver } from './recipes/recipe-detail/recipe-detail.resolver';
 import { RecipeService } from './shared/recipes.services';
+import { HttpClientModule } from '@angular/common/http';
+import { AuthComponent } from './auth/auth/auth.component';
+import { BannerComponent } from './banner/banner.component';
 
 // // const routes: Routes = [
 // // 	{ path: 'routePath', component: Component },
@@ -41,12 +46,17 @@ import { RecipeService } from './shared/recipes.services';
 		UnlessDirective,
 		ExampleComponent,
 		RecipeStartComponent,
-		RecipeEditComponent
+		RecipeEditComponent,
+		AuthComponent,
+		BannerComponent
 	],
 	imports: [
 		BrowserModule,
+		AngularFontAwesomeModule,
 		FormsModule,
+		ReactiveFormsModule,
 		BrowserAnimationsModule,
+		HttpClientModule,
 		NoopAnimationsModule,
 		AppRoutingModule
 	],

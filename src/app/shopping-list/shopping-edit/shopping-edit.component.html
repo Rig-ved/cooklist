@@ -1,26 +1,55 @@
 <div class="">
-  <div class="col md-12">
-    <form action="">
-      <div class="row">
-        <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" id="name" class="form-control" placeholder="name" #nameInput>
-        </div>
-        <div class="form-group ml-2">
-            <label for="number">Amount:</label>
-            <input type="number" id="amount" class="form-control" placeholder="How much" #amountInput>
-        </div>
-        <div class="form-group ml-2">
-            <label for="unit">Unit:</label>
-            <input type="text" id="unit" class="form-control" placeholder="Unit" #unitInput>
-        </div>
-
+  <div class="">
+    <form (ngSubmit)="onAddItem(f)" #f="ngForm" autocomplete="off">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input
+          type="text"
+          id="name"
+          class="form-control"
+          placeholder="name"
+          ngModel
+          required
+          name="name"
+        />
       </div>
+      <div class="form-group">
+        <label for="number">Amount:</label>
+        <input
+          type="number"
+          id="amount"
+          class="form-control"
+          placeholder="How much"
+          ngModel
+          required
+          #amount="ngModel"
+          [pattern]="'^[1-9]+[0-9]*$'"
+          name="amount"
+        />
+        <small class="invalid-feedback" *ngIf="!amount.valid&&amount.touched"><i>Not a valid number</i></small>
+      </div>
+      <div class="form-group">
+        <label for="unit">Unit:</label>
+        <input
+          type="text"
+          id="unit"
+          class="form-control"
+          placeholder="Unit"
+          ngModel
+          required
+          name="unit"
+        />
+      </div>
+
       <div class="">
-        <div class="row">
-          <button class="btn btn-primary" (click)="onAdd()">Add</button>
-          <button class="btn btn-danger ml-2" (click)="onDelete()">Delete</button>
-          <button class="btn btn-warning ml-2" (click)="onClear()">Clear</button>
+        <div class="row ml-2">
+          <button class="btn btn-primary" [disabled]="!f.valid" (click)="onAdd()">{{mode ? 'Update':'Add'}}</button>
+          <button class="btn btn-danger ml-2" *ngIf="mode" (click)="onDelete()">
+            Delete
+          </button>
+          <button class="btn btn-warning ml-2" (click)="onClear()">
+            Clear
+          </button>
         </div>
       </div>
     </form>

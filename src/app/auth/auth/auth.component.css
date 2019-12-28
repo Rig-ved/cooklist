@@ -1,0 +1,15 @@
+
+
+.background-img{
+    background-image: url("/assets/images/background-1.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    height :100%
+}
+
+
+input.ng-invalid.ng-touched {
+    border: 1px solid red ;
+}

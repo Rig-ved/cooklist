@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Ingredient } from '../shared/ingredient.model'
 import { shoppingListService } from '../shared/shopping-list.service';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-shopping-list',
   templateUrl: './shopping-list.component.html',
@@ -11,7 +12,8 @@ import { Subscription } from 'rxjs';
 export class ShoppingListComponent implements OnInit,OnDestroy {
   ingredients:Ingredient[] ;
   private igSubscription:Subscription
-  constructor(private shoppingListServ: shoppingListService) { }
+  constructor(
+    private shoppingListServ: shoppingListService,private router:Router) { }
 
   ngOnInit() {
     this.ingredients = this.shoppingListServ.getIngredients();
@@ -24,5 +26,8 @@ export class ShoppingListComponent implements OnInit,OnDestroy {
   ngOnDestroy(){
     this.igSubscription.unsubscribe()
   }
+  onEditShoppingList(i:number){
+      this.shoppingListServ.shoppingEdit.next(i)
+  } 
  
 }

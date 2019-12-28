@@ -1,0 +1,11 @@
+label {
+    font-weight: bolder;
+}
+
+.btn.first {
+    margin-top: 32px;
+}
+
+input.ng-invalid.ng-touched,textarea.ng-invalid.ng-touched {
+    border: 1px solid red;
+}

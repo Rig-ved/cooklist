@@ -39,25 +39,31 @@ export class RecipeDetailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // this.route.params
-    //   .pipe(
-    //     map((data:Params) => {
-    //       return +data["id"];
-    //     })
-    //   )
-    //   .subscribe((params) => {
-    //     this.id = params - 1;
-    //     this.selectedRecipe = this.recipeService.getRecipe(this.id);
-    //   });
+    this.route.params
+      .pipe(
+        map((data:Params) => {
+          return +data["id"];
+        })
+      )
+      .subscribe((params) => {
+        this.id = params;
+        this.selectedRecipe = this.recipeService.getRecipe(this.id);
+        
+      });
 
-    this.route.data
-      .subscribe(
-        (data: Data) => {
-          this.selectedRecipe = data['detail']
-        }
-      );
+
+  //   this.route.params.subscribe((data:Params)=>{
+  //     this.id=+data['id']
+  //   })
+  //   this.route.data
+  //     .subscribe(
+  //       (data: Data) => {
+  //         this.selectedRecipe = data['detail']
+          
+  //       }
+  //     );
+  // }
   }
-
   addToShoppingList() {
     this.recipeService.addIngredientsToShoppingList(
       this.selectedRecipe.ingredients
@@ -65,5 +71,9 @@ export class RecipeDetailComponent implements OnInit {
   }
   onEditRecipe() {
     this.router.navigate(["edit"], { relativeTo: this.route });
+  }
+  onDeleteRecipe(){
+    this.recipeService.deleteRecipe(this.id);
+    this.router.navigate(['/recipes'],{relativeTo:this.route})
   }
 }
