@@ -24,6 +24,7 @@ import { RecipeService } from './shared/recipes.services';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthComponent } from './auth/auth/auth.component';
 import { BannerComponent } from './banner/banner.component';
+import { SpinnerComponent } from './shared/spinner/spinner.component';
 
 // // const routes: Routes = [
 // // 	{ path: 'routePath', component: Component },
@@ -48,7 +49,8 @@ import { BannerComponent } from './banner/banner.component';
 		RecipeStartComponent,
 		RecipeEditComponent,
 		AuthComponent,
-		BannerComponent
+		BannerComponent,
+		SpinnerComponent
 	],
 	imports: [
 		BrowserModule,

@@ -28,7 +28,8 @@ export class AuthService{
     private authSubject = new Subject<any>();
     
     signup(data) {
-      return this.http.post<AuthResponse>("https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDO9avzbc-NuehPt5EoTr8tQFmyzg7qQF8",
+      return this.http.post<AuthResponse>
+        ("https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDO9avzbc-NuehPt5EoTr8tQFmyzg7qQF8",
         data)
     }
 }
