@@ -13,13 +13,13 @@ import { AuthComponent } from './auth/auth/auth.component';
 const appRoutes:Routes = [
 
     {path:'',redirectTo:'/recipes',pathMatch:'full'},
-    {path:'authenticate',component:AuthComponent,data: {background: '/assets/images/background.jpg'}},
+    {path:'login',component:AuthComponent,data: {background: '/assets/images/background.jpg'}},
     {path:'recipes',component:RecipesComponent,children:[
         {path:'',component:RecipeStartComponent},
         {path:'new',component:RecipeEditComponent},
-        {path:':id',component:RecipeDetailComponent,resolve:[RecipeDetailResolver]},
-        {path:':id/edit',component:RecipeEditComponent,resolve:[RecipeDetailResolver]}
-        
+        {path:':id',component:RecipeDetailComponent},
+        {path:':id/edit',component:RecipeEditComponent}
+
     ]},
     {path:'shopping-list',component:ShoppingListComponent},
 ]

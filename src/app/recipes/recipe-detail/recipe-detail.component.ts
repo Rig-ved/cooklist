@@ -10,6 +10,7 @@ import {
 import { RecipeService } from "src/app/shared/recipes.services";
 import { ActivatedRoute, Params, Router, Data } from "@angular/router";
 import { map } from "rxjs/operators";
+import { AuthService } from 'src/app/auth/auth/auth.service';
 
 @Component({
   selector: "app-recipe-detail",
@@ -34,11 +35,13 @@ export class RecipeDetailComponent implements OnInit {
   id: number;
   constructor(
     private recipeService: RecipeService,
+    private authService:AuthService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
 
   ngOnInit() {
+    let id:number
     this.route.params
       .pipe(
         map((data:Params) => {
@@ -47,7 +50,11 @@ export class RecipeDetailComponent implements OnInit {
       )
       .subscribe((params) => {
         this.id = params;
-        this.selectedRecipe = this.recipeService.getRecipe(this.id);
+        id=this.id;
+        this.recipeService.getRecipe();
+        this.recipeService.recipeAdded.subscribe((recipe:RecipesModel[])=>{
+          this.selectedRecipe=recipe.slice()[id]
+        })
         
       });
 

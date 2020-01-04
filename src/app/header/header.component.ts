@@ -1,15 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DataStorageService } from '../shared/data-store.service';
-import { RecipesModel } from '../recipes/recipes.model';
+import { AuthService } from '../auth/auth/auth.service';
+import { UserModel } from '../auth/auth/user.model';
+import { Subscription } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit {
-  constructor(private dataStore:DataStorageService) { }
+export class HeaderComponent implements OnInit,OnDestroy {
+
+  authSubscription: Subscription;
+  isAuthenticated:boolean = false
+  constructor(
+    private authService:AuthService,
+    private router : Router,
+    private route:ActivatedRoute,
+    private dataStore:DataStorageService) { }
   ngOnInit() {
+    // TODO pass from app component where the authorization should be 
+    this.authSubscription = this.authService.authenticatedUser.subscribe((user:UserModel)=>{
+          this.isAuthenticated = !!user
+    })
+  
+  }
+
+  logout() {
+    this.authService.logout()
   }
   onSaveDataToDB() {
     this.dataStore.storeRecipes()
@@ -17,5 +36,7 @@ export class HeaderComponent implements OnInit {
   fetchRecipesFromDB(){
     this.dataStore.fetchRecipes().subscribe()
   }
-
+  ngOnDestroy(): void {
+    this.authSubscription.unsubscribe()
+  }
 }

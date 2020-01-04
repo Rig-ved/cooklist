@@ -2,7 +2,7 @@ import { RecipesModel } from '../recipes/recipes.model';
 import { EventEmitter, Injectable } from '@angular/core';
 import { Ingredient } from './ingredient.model';
 import { shoppingListService } from './shopping-list.service';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { serverUrl } from 'src/environments/environment';
 import { map, tap } from 'rxjs/operators';
@@ -37,6 +37,8 @@ export class RecipeService {
         this.recipes = items;
         this.recipeAdded.next(this.recipes.slice());
     }
+
+    
     getRecipes() {
         return this.http.get(serverUrl.post+'recipes.json')
         .pipe(
@@ -52,8 +54,7 @@ export class RecipeService {
         ).subscribe( 
             // Successful responses call the first callback.
             (items:RecipesModel[]) => {
-                this.recipes = items;
-                this.recipeAdded.next(this.recipes.slice())
+                this.setRecipesFromDB(items)
             },
             // Errors will call this callback instead:
             (err) => {
@@ -61,8 +62,8 @@ export class RecipeService {
             })
         // return this.recipes.slice()
     }
-    getRecipe(id:number){
-        return this.recipes.slice()[id]
+    getRecipe(){
+        this.recipeAdded.next(this.recipes.slice())
     }
     addRecipes(recipe:RecipesModel){
         this.recipes.push(recipe);
@@ -82,3 +83,39 @@ export class RecipeService {
     }
     
 }
+
+// getRecipes() {
+//     this.authService.authenticatedUser
+//       .pipe(
+//         take(1),
+//         exhaustMap((user: UserModel) => {
+//           return this.http.get(serverUrl.post + "recipes.json", {
+//             params: new HttpParams().append("auth", user.token)
+//           });
+//         }),
+//         map((recipes: RecipesModel[]) => {
+//           return recipes.map(function(item) {
+//             item.ingredients = item.ingredients ? item.ingredients : [];
+//             return item;
+//           });
+//         }),
+//         catchError((error:HttpErrorResponse)=>{
+//             return throwError(error);
+//         }),
+//         tap((items: RecipesModel[]) => {
+//           console.log("Coming inside from tap in service" + items);
+//         })
+//       )
+//       .subscribe(
+//         // Successful responses call the first callback.
+//         (items: RecipesModel[]) => {
+//           this.setRecipesFromDB(items)
+//         },(err) =>{
+//             throw new Error(err);
+//         }
+//         // Errors will call this callback instead:
+        
+//       );
+
+//     // return this.recipes.slice()
+//   }

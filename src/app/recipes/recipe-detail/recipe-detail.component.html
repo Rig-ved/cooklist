@@ -1,18 +1,18 @@
 <div class="row margins" [@simpleFadeAnimation]="'in'">
   <div class="col-md-12">
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-4" *ngIf="selectedRecipe">
         <img
-          [src]="selectedRecipe.imagePath"
+          [src]="selectedRecipe?.imagePath"
           class="img-fluid "
-          alt="selectedRecipe.name"
+          alt="selectedRecipe?.name"
         />
       </div>
 
-      <div class="col-md-8">
+      <div class="col-md-8" *ngIf="selectedRecipe">
         <div class="row">
           <div class="col-md-4">
-            <h5>{{ selectedRecipe.name }}</h5>
+            <h5>{{ selectedRecipe?.name }}</h5>
           </div>
           <div class="col-md-8">
             <div class="btn-group" role="group">
@@ -40,7 +40,7 @@
         <div class="row">
           <div class="col-md-12 mt-3">
             <span
-              ><em>{{ selectedRecipe.description }} </em></span
+              ><em>{{ selectedRecipe?.description }} </em></span
             >
           </div>
         </div>
@@ -49,11 +49,11 @@
             <ul class="list-group ml-3">
               <li
                 class="list-group-item"
-                *ngFor="let item of selectedRecipe.ingredients"
+                *ngFor="let item of selectedRecipe?.ingredients"
               >
-                {{ selectedRecipe.name }} needs {{ item.amount
-                }}{{ item.unit }} of
-                {{ item.name }}
+                {{ selectedRecipe?.name }} needs {{ item?.amount
+                }}{{ item?.unit }} of
+                {{ item?.name }}
               </li>
             </ul>
           </div>

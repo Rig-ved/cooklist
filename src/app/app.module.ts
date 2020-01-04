@@ -15,23 +15,40 @@ import { ShoppingEditComponent } from './shopping-list/shopping-edit/shopping-ed
 import { BetterHighlightDirective } from './shared/better-highlight.directive';
 import { UnlessDirective } from './shared/unless.directive';
 import { ExampleComponent } from './example/example.component';
+
 import { shoppingListService } from './shared/shopping-list.service';
 import { AppRoutingModule } from './app-routing.module';
 import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.component';
 import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
 import { RecipeDetailResolver } from './recipes/recipe-detail/recipe-detail.resolver';
 import { RecipeService } from './shared/recipes.services';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthComponent } from './auth/auth/auth.component';
 import { BannerComponent } from './banner/banner.component';
 import { SpinnerComponent } from './shared/spinner/spinner.component';
-
+import { LoadingInterceptorService } from './shared/loadingInterceptor.service';
+import { NgxIndexedDBModule, DBConfig } from 'ngx-indexed-db';
 // // const routes: Routes = [
 // // 	{ path: 'routePath', component: Component },
 // // 	{ path: '**', pathMatch: 'full', redirectTo: 'routePath' }
 // // ];
 
 // export const appRouting = RouterModule.forRoot(routes);
+
+
+const dbConfig: DBConfig  = {
+	name: 'RecipesDB',
+	version: 1,
+	objectStoresMeta: [{
+	  store: 'users',
+	  storeConfig: { keyPath: 'id', autoIncrement: true },
+	  storeSchema: [
+		{ name: 'token', keypath: 'token', options: { unique: false } },
+		{ name: 'email', keypath: 'email', options: { unique: false } }
+	  ]
+	}]
+  };
+   
 
 @NgModule({
 	declarations: [
@@ -60,9 +77,20 @@ import { SpinnerComponent } from './shared/spinner/spinner.component';
 		BrowserAnimationsModule,
 		HttpClientModule,
 		NoopAnimationsModule,
-		AppRoutingModule
+		AppRoutingModule,
+		NgxIndexedDBModule.forRoot(dbConfig)
 	],
-	providers: [shoppingListService,RecipeService,RecipeDetailResolver],
+	providers: [shoppingListService,
+		RecipeService,
+		{
+			provide:HTTP_INTERCEPTORS,
+			useClass:LoadingInterceptorService,
+			multi:true
+		},
+		RecipeDetailResolver
+		
+
+	],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }

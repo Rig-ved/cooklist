@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Data } from '@angular/router';
+import { ActivatedRoute, Data, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { AuthService, AuthResponse } from './auth.service';
-import { Subscription } from 'rxjs';
+import { Subscription, interval } from 'rxjs';
 import { BannerInterface, BannerService } from 'src/app/banner/banner.service';
 
 @Component({
@@ -17,9 +17,11 @@ export class AuthComponent implements OnInit,OnDestroy {
   loginMode:boolean
   constructor(private route:ActivatedRoute,
     private authService:AuthService,
+    private router:Router,
     private bannerService:BannerService) { }
-  background:string = "";
+    background:string = "";
   private authSubscription:Subscription
+  private redirectSubscription:Subscription
 
   ngOnInit() {
     this.route.data.subscribe((data:Data) => {
@@ -28,26 +30,26 @@ export class AuthComponent implements OnInit,OnDestroy {
     })
    
   }
-  valuesClick(item:HTMLButtonElement) {
-      (item.id === "login") ?
+  valuesClick(item:MouseEvent) {
+      (item.target['id'] === "login") ?
       this.loginMode = true:this.loginMode = false
      
   }
   onAuthFormSubmit(form:NgForm) {
+    
     if(!form.valid) {
       return ;
     }
-    let message = "";
-
+    let message:string = "";
     if (this.loginMode) {
         message= "Logged in successfully"
     } else {
-        message = "User added to database"
+        message = "User created successfully"
     }
     const email = form.value.username;
     const password = form.value.password
     const data= {email,password,returnSecureToken:true}
-    this.authSubscription = this.authService.signup(data).subscribe(
+    this.authSubscription = this.authService.signupOrLogin(data,this.loginMode).subscribe(
       (response:AuthResponse)=>{
           if(response) {
                 const data:BannerInterface= {
@@ -55,11 +57,13 @@ export class AuthComponent implements OnInit,OnDestroy {
                     messageType:'success'
                 }
                 this.bannerService.showBanner(data)
+                this.redirectSubscription=interval(1000).subscribe(()=>{
+                    this.router.navigate(['/recipes'],{relativeTo:this.route})
+                })
           }
-    },(err) =>{
-      console.log("Error is" +err)
-      const data:BannerInterface= {
-        message:err.error.error.message,
+    },(errMsg) =>{
+     const data:BannerInterface= {
+        message:errMsg,
         messageType:'error'
     }
     this.bannerService.showBanner(data)
@@ -69,7 +73,8 @@ export class AuthComponent implements OnInit,OnDestroy {
 
 
   ngOnDestroy(): void {
-    this.authSubscription.unsubscribe()
+    this.authSubscription.unsubscribe();
+    this.redirectSubscription.unsubscribe()
   }
 
 } 
