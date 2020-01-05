@@ -21,7 +21,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
     private dataStore:DataStorageService) { }
   ngOnInit() {
     // TODO pass from app component where the authorization should be 
-    this.authSubscription = this.authService.authenticatedUser.subscribe((user:UserModel)=>{
+    this.authSubscription  = this.authService.authenticatedUser.subscribe((user:UserModel)=>{
           this.isAuthenticated = !!user
     })
   

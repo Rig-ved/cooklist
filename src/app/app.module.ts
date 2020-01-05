@@ -28,6 +28,7 @@ import { BannerComponent } from './banner/banner.component';
 import { SpinnerComponent } from './shared/spinner/spinner.component';
 import { LoadingInterceptorService } from './shared/loadingInterceptor.service';
 import { NgxIndexedDBModule, DBConfig } from 'ngx-indexed-db';
+import { PasswordResetComponent } from './app/password-reset/password-reset.component';
 // // const routes: Routes = [
 // // 	{ path: 'routePath', component: Component },
 // // 	{ path: '**', pathMatch: 'full', redirectTo: 'routePath' }
@@ -67,7 +68,8 @@ const dbConfig: DBConfig  = {
 		RecipeEditComponent,
 		AuthComponent,
 		BannerComponent,
-		SpinnerComponent
+		SpinnerComponent,
+		PasswordResetComponent
 	],
 	imports: [
 		BrowserModule,

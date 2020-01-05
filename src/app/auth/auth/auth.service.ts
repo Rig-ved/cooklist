@@ -12,12 +12,17 @@ import { HttpClient } from '@angular/common/http';
 import { Subject, throwError, BehaviorSubject, from, Observable, of, timer } from 'rxjs';
 import { catchError, tap, timeout, delay, scan, takeWhile, takeUntil, map, filter } from 'rxjs/operators';
 import { UserModel } from './user.model';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { RecipeService } from 'src/app/shared/recipes.services';
 import { BannerService, BannerInterface } from 'src/app/banner/banner.service';
 import { Time } from '@angular/common';
+import { PasswordResetSuccessModel } from 'src/app/app/password-reset/passwordReset.model';
 
+
+export enum dontAuthenticatePage  {
+    resetPassword="password-reset"
+}
 
 export interface AuthResponse {
     idToken:string,
@@ -42,7 +47,8 @@ export class AuthService{
     expirationTmr:any
     constructor(private http:HttpClient,
         private router:Router,
-        private banner:BannerService,
+        private route:ActivatedRoute,
+         private banner:BannerService,
         private ngxIndexedDBService:NgxIndexedDBService
         
     ){
@@ -95,13 +101,24 @@ export class AuthService{
             this.autoTimerStarts(expirationTime)
         },expirationTime)
     }
-
+    checkLoggingOut() {
+        if(this.route.snapshot.queryParams['mode'] === 'resetPassword'){
+            return true
+        }
+        return false
+    }
     autoLogin() {
         // TODO get the data from the indexed DB 
-         let autoLoggedInUser:UserModel;  
+         let autoLoggedInUser:UserModel; 
          this.ngxIndexedDBService.getAll().then((user:autoLoggedUserModel[])=>{
             if(user.length == 0) {
-                return ;
+                if (this.checkLoggingOut()){
+                    return ;
+                } else {
+                    this.logout()
+                    return 
+                }
+               
             }
             
             let loadedUser=user[0];  
@@ -117,8 +134,8 @@ export class AuthService{
                 this.authenticatedUser.next(autoLoggedInUser)
                 const expirationDuration = new Date(loadedUser._tokenExpirationDate).getTime() - 
                 new Date().getTime();
-               // this.autoLogout(expirationDuration)
-                this.autoLogout(20000)
+                this.autoLogout(expirationDuration)
+                //this.autoLogout(20000)
 
             } else {
                 this.logout()
@@ -162,11 +179,11 @@ export class AuthService{
             const expirationDate = new Date(new Date().getTime() + +resData.expiresIn * 1000);
             const user = new UserModel(resData.email,resData.localId,resData.idToken,expirationDate)
             this.saveUserDataToDB(user)
-            //this.autoLogout(+resData.expiresIn * 1000)
-            this.autoLogout(31000)
             this.authenticatedUser.next(user);
+            this.autoLogout(+resData.expiresIn * 1000)
+            //this.autoLogout(20000)
             
-        }
+        } 
     }
 
     private saveUserDataToDB(user) {
@@ -194,5 +211,52 @@ export class AuthService{
            
                
         }
+    }
+
+    forgotPassword (data) {
+        const url =
+      "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyDO9avzbc-NuehPt5EoTr8tQFmyzg7qQF8"  
+      return this.http.post<AuthResponse>
+        (url,
+        data).pipe(
+            catchError((error)=>{
+                let errorMsg:string = "An unknown error occured"
+                if(!error.error && !error.error.error) {
+                    return throwError(errorMsg)
+                }
+                switch (error.error.error.message) {
+                    case 'EMAIL_NOT_FOUND':
+                       errorMsg="Email Id not entered ,Please sign up first." 
+
+                }
+                return throwError(errorMsg)     
+            }),
+            tap((resData:AuthResponse)=>{
+                
+            })
+        )  
+    }
+
+    resetPassword(data) {
+        const url =
+        "https://identitytoolkit.googleapis.com/v1/accounts:resetPassword?key=AIzaSyDO9avzbc-NuehPt5EoTr8tQFmyzg7qQF8"  
+        return this.http.post<PasswordResetSuccessModel>
+          (url,
+          data).pipe(
+              catchError((error)=>{
+                  let errorMsg:string = "An unknown error occured"
+                  if(!error.error && !error.error.error) {
+                      return throwError(errorMsg)
+                  }
+                  switch (error.error.error.message) {
+                      case 'EXPIRED_OOB_CODE':
+                          errorMsg="You have waited too long. Please reset password again"  
+                  }
+                  return throwError(errorMsg)     
+              }),
+              tap((resData:PasswordResetSuccessModel)=>{
+                  
+              })
+          ) 
     }
 }
