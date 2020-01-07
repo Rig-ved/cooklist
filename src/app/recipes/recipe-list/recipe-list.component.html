@@ -6,11 +6,15 @@
 <hr />
 <div class="row">
   <div class="col-md-12">
-    <app-recipe-item
+    <ng-container *ngIf="recipes">
+    
+    <app-recipe-item 
       *ngFor="let item of recipes;let i = index"
       [recipe]="item"
       [index]="i"
     >
     </app-recipe-item>
+
+    </ng-container>
   </div>
 </div>

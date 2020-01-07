@@ -39,10 +39,10 @@
 						minlength="6">
 					</div>
 
-					<div class="remember">
+					<!-- <div class="remember">
 						<input type="checkbox"  name="remember" id="remember">
 						<label class="ml-2" for="remember">Remember Me</label>
-					</div>
+					</div> -->
 					<div class="form-group">
 						<button id="login"  *ngIf="!isForgotPassword" type="submit" [disabled]="!f.valid"  (click)="valuesClick($event)" value="Login" class="btn float-right btn-primary">Login</button>
 						<button id="signup" *ngIf="!isForgotPassword" type="submit" [disabled]="!f.valid"  (click)="valuesClick($event)" value="Sign Up" class="btn mr-3 float-right btn-success">Sign up</button>

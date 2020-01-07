@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { RecipesModel } from "../recipes.model";
 import {
   trigger,
@@ -9,8 +9,9 @@ import {
 } from "@angular/animations";
 import { RecipeService } from "src/app/shared/recipes.services";
 import { ActivatedRoute, Params, Router, Data } from "@angular/router";
-import { map } from "rxjs/operators";
-import { AuthService } from 'src/app/auth/auth/auth.service';
+import { map, take } from "rxjs/operators";
+import { AuthService } from "src/app/auth/auth/auth.service";
+import { Subscription, throwError } from "rxjs";
 
 @Component({
   selector: "app-recipe-detail",
@@ -30,46 +31,41 @@ import { AuthService } from 'src/app/auth/auth/auth.service';
     ])
   ]
 })
-export class RecipeDetailComponent implements OnInit {
+export class RecipeDetailComponent implements OnInit, OnDestroy {
   selectedRecipe: RecipesModel;
   id: number;
+  selectedRecipeSubs: Subscription;
+  recipeSub :Subscription
   constructor(
     private recipeService: RecipeService,
-    private authService:AuthService,
+    private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
 
   ngOnInit() {
-    let id:number
-    this.route.params
-      .pipe(
-        map((data:Params) => {
-          return +data["id"];
-        })
-      )
-      .subscribe((params) => {
-        this.id = params;
-        id=this.id;
-        this.recipeService.getRecipe();
-        this.recipeService.recipeAdded.subscribe((recipe:RecipesModel[])=>{
-          this.selectedRecipe=recipe.slice()[id]
-        })
-        
-      });
-
-
-  //   this.route.params.subscribe((data:Params)=>{
-  //     this.id=+data['id']
-  //   })
-  //   this.route.data
-  //     .subscribe(
-  //       (data: Data) => {
-  //         this.selectedRecipe = data['detail']
+    let id: number;
+    this.selectedRecipeSubs = this.route.params.subscribe((params: Params) => {
+      if (params["id"]) {
+        this.id = params["id"];
+        id = this.id;
+        this.recipeService.getRecipe()
+        this.recipeSub= this.recipeService.recipeSingle.subscribe((recipe:RecipesModel[])=>{
+          if(recipe.length>0) {
+            this.selectedRecipe = recipe.slice()[id]
+          }    
           
-  //       }
-  //     );
-  // }
+        })
+       
+        
+      }
+    });
+  }
+  ngOnDestroy() {
+    if(this.selectedRecipeSubs)
+    this.selectedRecipeSubs.unsubscribe();
+    if(this.recipeSub)
+    this.recipeSub.unsubscribe()
   }
   addToShoppingList() {
     this.recipeService.addIngredientsToShoppingList(
@@ -79,8 +75,8 @@ export class RecipeDetailComponent implements OnInit {
   onEditRecipe() {
     this.router.navigate(["edit"], { relativeTo: this.route });
   }
-  onDeleteRecipe(){
+  onDeleteRecipe() {
     this.recipeService.deleteRecipe(this.id);
-    this.router.navigate(['/recipes'],{relativeTo:this.route})
+    this.router.navigate(["/recipes"], { relativeTo: this.route });
   }
 }

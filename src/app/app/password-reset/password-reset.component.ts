@@ -7,7 +7,8 @@ import {
   PasswordResetSuccessModel
 } from "./passwordReset.model";
 import { Subscription, interval } from "rxjs";
-import { BannerInterface, BannerService } from "src/app/banner/banner.service";
+
+import { BannerInterface, BannerService } from "src/app/shared/banner/banner.service";
 import { take } from "rxjs/operators";
 
 @Component({

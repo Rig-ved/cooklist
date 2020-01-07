@@ -3,7 +3,7 @@ import { ActivatedRoute, Data, Router } from "@angular/router";
 import { NgForm } from "@angular/forms";
 import { AuthService, AuthResponse } from "./auth.service";
 import { Subscription, interval } from "rxjs";
-import { BannerInterface, BannerService } from "src/app/banner/banner.service";
+import { BannerInterface, BannerService } from "src/app/shared/banner/banner.service";
 
 @Component({
   selector: "app-auth",
@@ -58,13 +58,11 @@ export class AuthComponent implements OnInit, OnDestroy {
               messageType: "success"
             };
             this.bannerService.showBanner(data);
-            if (this.loginMode) {
+            
               this.redirectSubscription = interval(1000).subscribe(() => {
                 this.router.navigate(["/recipes"], { relativeTo: this.route });
               });
-            } else {
-              this.router.navigate(["/login"], { relativeTo: this.route });
-            }
+             
           }
         },
         errMsg => {

@@ -14,11 +14,11 @@ export class DataStorageService {
        ){}
     
     storeRecipes() {
-        let recipesList = this.recipeService.getRecipes();
-        let url = serverUrl.post +'recipes.json'
-        return this.http.put(url,recipesList).subscribe((response)=>{
-            console.log(response);
-        })
+        // let recipesList = this.recipeService.getRecipes();
+        // let url = serverUrl.post +'recipes.json'
+        // return this.http.put(url,recipesList).subscribe((response)=>{
+        //     console.log(response);
+        // })
     }
 
     fetchRecipes() {

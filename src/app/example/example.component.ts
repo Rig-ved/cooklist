@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+
 
 @Component({
   selector: 'app-example',
@@ -7,18 +8,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ExampleComponent implements OnInit {
 
+
+  @Input('message') message:string
+  @Output() close= new EventEmitter<void>()
   constructor() { }
 
   ngOnInit() {
   }
-  oddNumbers = [1, 3, 5];
-  evenNumbers = [2, 4];
-  onlyOdd = false;
-  colorObject:object = {
-    defaultColor:'transparent',
-    highlightColor:'red'
-  } 
+  // oddNumbers = [1, 3, 5];
+  // evenNumbers = [2, 4];
+  // onlyOdd = false;
+  // colorObject:object = {
+  //   defaultColor:'transparent',
+  //   highlightColor:'red'
+  // } 
 
-  value = 5;
+  // value = 5;
+  onClose () {
+    this.close.emit()
+  }
 
 }
