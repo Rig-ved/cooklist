@@ -1,7 +1,12 @@
 import { Ingredient } from './ingredient.model';
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
+// If the service has some dependency itself then we add the @Injectable in angular 
+
+@Injectable({
+    providedIn:'root'
+})
 export class shoppingListService {
     
     ingredientAdded = new Subject<Ingredient[]>()

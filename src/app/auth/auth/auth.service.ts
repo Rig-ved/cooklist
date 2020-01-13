@@ -18,6 +18,7 @@ import {
   BannerInterface
 } from "src/app/shared/banner/banner.service";
 import { PasswordResetSuccessModel } from "src/app/app/password-reset/passwordReset.model";
+import { EnvService } from 'src/app/env.service';
 
 export enum dontAuthenticatePage {
   resetPassword = "password-reset"
@@ -49,7 +50,9 @@ export class AuthService {
     private router: Router,
     private route: ActivatedRoute,
     private banner: BannerService,
-    private ngxIndexedDBService: NgxIndexedDBService
+    private ngxIndexedDBService: NgxIndexedDBService,
+    private envService:EnvService
+
   ) {
     this.ngxIndexedDBService.currentStore = "users";
   }
@@ -144,8 +147,8 @@ export class AuthService {
 
   signupOrLogin(data, mode: boolean) {
     const url = !mode
-      ? "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDO9avzbc-NuehPt5EoTr8tQFmyzg7qQF8"
-      : "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDO9avzbc-NuehPt5EoTr8tQFmyzg7qQF8";
+      ? this.envService.signUp+`?key=${this.envService.apiKey}`
+      : this.envService.signIn+`?key=${this.envService.apiKey}`
     return this.http.post<AuthResponse>(url, data).pipe(
       catchError(error => {
         let errorMsg: string = "An unknown error occured";
@@ -209,7 +212,7 @@ export class AuthService {
 
   forgotPassword(data) {
     const url =
-      "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyDO9avzbc-NuehPt5EoTr8tQFmyzg7qQF8";
+    this.envService.forgotPassword+`?key=${this.envService.apiKey}`;
     return this.http.post<AuthResponse>(url, data).pipe(
       catchError(error => {
         let errorMsg: string = "An unknown error occured";
@@ -228,7 +231,7 @@ export class AuthService {
 
   resetPassword(data) {
     const url =
-      "https://identitytoolkit.googleapis.com/v1/accounts:resetPassword?key=AIzaSyDO9avzbc-NuehPt5EoTr8tQFmyzg7qQF8";
+    this.envService.resetPassword+`?key=${this.envService.apiKey}`;
     return this.http.post<PasswordResetSuccessModel>(url, data).pipe(
       catchError(error => {
         let errorMsg: string = "An unknown error occured";

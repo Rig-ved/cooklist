@@ -8,7 +8,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 const routes: Routes = [
   {
-    path: "shopping-list", //canActivate:[AuthGuard],
+    path: "", //canActivate:[AuthGuard],
     component: ShoppingListComponent
   }
 ];

@@ -1,22 +1,30 @@
 import { RecipesModel } from '../recipes/recipes.model';
 import { EventEmitter, Injectable } from '@angular/core';
 import { Ingredient } from './ingredient.model';
-import { shoppingListService } from './shopping-list.service';
-import { Subject, Observable, BehaviorSubject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { serverUrl } from 'src/environments/environment';
 import { map, tap } from 'rxjs/operators';
+import { EnvService } from '../env.service';
+import { Store } from '@ngrx/store';
+import * as shoppingListActions from '../shopping-list/store/shopping-list.actions'
+import { AppState } from '../shopping-list/store/shopping-list.reducer';
 
-
-@Injectable()
+@Injectable({
+    providedIn:'root'
+})
 export class RecipeService {
     recipeSelected = new EventEmitter<RecipesModel>();
     recipeAdded = new Subject<RecipesModel[]>();
     recipeSingle= new BehaviorSubject<RecipesModel[]>(null)
 
 
-    constructor(private http:HttpClient,private shoppingListService:shoppingListService){}
-    private recipes :  RecipesModel[] =[
+    constructor(
+
+        private http:HttpClient,
+        private envService:EnvService,
+        private store:Store<AppState>
+        ){}
+        private recipes :  RecipesModel[] =[
         //** */
     ]
 
@@ -28,7 +36,7 @@ export class RecipeService {
 
     
     getRecipes() {
-        return this.http.get(serverUrl.post+'recipes.json')
+        return this.http.get(this.envService.post+'recipes.json')
         .pipe(
             // Use Pipe to transform the non mandatory request 
             map((recipes:RecipesModel[])=>{
@@ -59,8 +67,9 @@ export class RecipeService {
         this.recipeAdded.next(this.recipes.slice())
         
     }
-    addIngredientsToShoppingList(ingredient:Ingredient[]){
-        this.shoppingListService.addIngredientsFromRecipes(ingredient)
+    addIngredientsToShoppingList(ingredients:Ingredient[]){
+        // this.shoppingListService.addIngredientsFromRecipes(ingredient)
+        this.store.dispatch(new shoppingListActions.AddIngredientsFromRecipes(ingredients))
     }
     
 }

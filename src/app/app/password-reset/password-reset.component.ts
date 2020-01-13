@@ -28,6 +28,7 @@ export class PasswordResetComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    debugger
     this.route.queryParams
       .pipe(take(1))
       .subscribe((params: PasswordResponseModel) => {

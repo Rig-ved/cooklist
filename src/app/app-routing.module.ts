@@ -1,21 +1,30 @@
 import { NgModule } from "@angular/core";
-import { Routes, RouterModule } from "@angular/router";
+import { Routes, RouterModule, PreloadingStrategy, PreloadAllModules } from "@angular/router";
 
-import { AuthComponent } from "./auth/auth/auth.component";
-
-import { PasswordResetComponent } from "./app/password-reset/password-reset.component";
 
 const appRoutes: Routes = [
+  {path:'',redirectTo:'/recipes',pathMatch:'full'},
   {
-    path: "login",
-    component: AuthComponent,
-    data: { background: "/assets/images/background.jpg" }
+    path: "recipes",
+    loadChildren:'./recipes/recipes.module#RecipeModule',
   },
-  { path: "password-reset", component: PasswordResetComponent }
+  {
+    path: "shopping-list",
+    loadChildren: './shopping-list/shopping-list.module#shoppingListModule'
+
+  }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(appRoutes)],
+  imports: [
+    RouterModule.forRoot(appRoutes,{preloadingStrategy:PreloadAllModules})
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}
+
+
+// loadChildren:'./recipes/recipes.module#RecipeModule',
+// loadChildren:'./shopping-list/shopping-list.module#shoppingListModule',
+// login
+// password-reset

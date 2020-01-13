@@ -12,6 +12,7 @@ import { ActivatedRoute, Params, Router, Data } from "@angular/router";
 import { map, take } from "rxjs/operators";
 import { AuthService } from "src/app/auth/auth/auth.service";
 import { Subscription, throwError } from "rxjs";
+import { Ingredient } from 'src/app/shared/ingredient.model';
 
 @Component({
   selector: "app-recipe-detail",
@@ -69,7 +70,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   }
   addToShoppingList() {
     this.recipeService.addIngredientsToShoppingList(
-      this.selectedRecipe.ingredients
+      (this.selectedRecipe.ingredients) as Ingredient[]
     );
   }
   onEditRecipe() {

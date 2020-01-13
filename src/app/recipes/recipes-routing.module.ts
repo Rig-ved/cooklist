@@ -9,8 +9,8 @@ import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
 
 const appRoutes:Routes = [
 
-    {path:'',redirectTo:'/recipes',pathMatch:'full'},
-    {path:'recipes',
+    
+    {path:'',
    // canActivate:[AuthGuard],
     component:RecipesComponent,children:[
         {path:'',component:RecipeStartComponent},

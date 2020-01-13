@@ -28,7 +28,9 @@ export class AuthComponent implements OnInit, OnDestroy {
     this.route.data.subscribe((data: Data) => {
       if (data) this.background = data["background"];
     });
+   
   }
+
   valuesClick(item: MouseEvent) {
     this.isForgotPassword = false;
     item.target["id"] === "login"
@@ -75,7 +77,7 @@ export class AuthComponent implements OnInit, OnDestroy {
       );
     this.signForm.resetForm();
   }
-  onAuthFormSubmit(form: NgForm) {
+  onAuthFormSubmit(form: NgForm,ham:any) {
     if (!this.isForgotPassword) {
       this.signUpOrLogin(form);
     } else {

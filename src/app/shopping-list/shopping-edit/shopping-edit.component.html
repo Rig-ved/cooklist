@@ -43,11 +43,11 @@
 
       <div class="">
         <div class="row ml-2">
-          <button class="btn btn-primary" [disabled]="!f.valid" (click)="onAdd()">{{mode ? 'Update':'Add'}}</button>
-          <button class="btn btn-danger ml-2" *ngIf="mode" (click)="onDelete()">
+          <button class="btn btn-primary" [disabled]="!f.valid" >{{mode ? 'Update':'Add'}}</button>
+          <button class="btn btn-danger ml-2" type="button" *ngIf="mode" (click)="onDelete()">
             Delete
           </button>
-          <button class="btn btn-warning ml-2" (click)="onClear()">
+          <button class="btn btn-warning ml-2" type="button" (click)="onClear()">
             Clear
           </button>
         </div>
