@@ -33,14 +33,13 @@ export function AuthReducer (state:UserState = initialStateAuth,action:authActio
             }
         }
         case authActions.LOGOUT : {
-            debugger
             return  {
                 ...state,
                 authError:null,
                 user:null
 
             }
-            debugger
+            
         }
         case authActions.LOGIN_START : {
             return  {

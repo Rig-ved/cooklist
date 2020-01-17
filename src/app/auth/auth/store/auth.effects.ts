@@ -107,13 +107,13 @@ export class AuthEffects {
       });
     })
   );
-//   @Effect({ dispatch: false })
-//   logOutSuccess: Observable<any> = this.action$.pipe(
-//     ofType(AuthActions.LOGOUT),
-//     tap(() => {
-//         return this.authService.logout()
-//     }) 
-//   );
+  @Effect({ dispatch: false })
+  logOutSuccess: Observable<any> = this.action$.pipe(
+    ofType(AuthActions.LOGOUT),
+    tap(() => {
+      this.authService.logout()
+    }) 
+  );
 
   @Effect({ dispatch: false })
   SignupSuccess: Observable<any> = this.action$.pipe(

@@ -12,7 +12,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { EnvServiceProvider } from './env.service.provider';
 import { AuthModule } from './auth/auth/auth.module';
 import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 import { AppReducer } from './store/app.reducer';
+import { AuthEffects } from './auth/auth/store/auth.effects';
 
 @NgModule({
 	declarations: [
@@ -27,6 +29,7 @@ import { AppReducer } from './store/app.reducer';
 		HttpClientModule,
 		NoopAnimationsModule,
 		AppRoutingModule,
+		EffectsModule.forRoot([AuthEffects]),
 		AuthModule,
 		SharedModule
 	
