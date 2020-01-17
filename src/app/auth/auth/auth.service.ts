@@ -23,6 +23,11 @@ import { EnvService } from 'src/app/env.service';
 export enum dontAuthenticatePage {
   resetPassword = "password-reset"
 }
+ 
+export interface ReqLoginSignUp {
+  email:string,
+  password:string
+}
 
 export interface AuthResponse {
   idToken: string;
