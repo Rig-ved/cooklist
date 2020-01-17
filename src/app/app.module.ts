@@ -12,7 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { EnvServiceProvider } from './env.service.provider';
 import { AuthModule } from './auth/auth/auth.module';
 import { StoreModule } from '@ngrx/store';
-import { shoppingListReducer } from './shopping-list/store/shopping-list.reducer';
+import { AppReducer } from './store/app.reducer';
 
 @NgModule({
 	declarations: [
@@ -21,9 +21,7 @@ import { shoppingListReducer } from './shopping-list/store/shopping-list.reducer
 	],
 	imports: [
 		BrowserModule,
-		StoreModule.forRoot({
-			shoppingList:shoppingListReducer
-		}),
+		StoreModule.forRoot(AppReducer),
 		AngularFontAwesomeModule,
 		BrowserAnimationsModule,
 		HttpClientModule,

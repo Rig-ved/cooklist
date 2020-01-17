@@ -4,6 +4,7 @@ import { AuthService } from '../auth/auth/auth.service';
 import { UserModel } from '../auth/auth/user.model';
 import { Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
+import { AppState } from '../store/app.reducer';
 
 @Component({
   selector: 'app-header',
@@ -13,10 +14,12 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class HeaderComponent implements OnInit,OnDestroy {
 
   authSubscription: Subscription;
-  isAuthenticated:boolean = false
+  isAuthenticated:boolean = false;
+  
   constructor(
     private authService:AuthService,
     private router : Router,
+    private store:Store<AppState>
     private route:ActivatedRoute,
     private dataStore:DataStorageService) { }
   ngOnInit() {
@@ -28,7 +31,8 @@ export class HeaderComponent implements OnInit,OnDestroy {
   }
 
   logout() {
-    this.authService.logout()
+    // this.authService.logout()
+    this.store
   }
   onSaveDataToDB() {
     this.dataStore.storeRecipes()
