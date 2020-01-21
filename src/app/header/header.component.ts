@@ -4,7 +4,7 @@ import { AuthService } from '../auth/auth/auth.service';
 import { UserModel } from '../auth/auth/user.model';
 import { Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AppState } from '../store/app.reducer';
+import { AppState } from '../app.reducer';
 import { Store } from '@ngrx/store';
 import * as AuthActions from '../auth/auth/store/auth.actions'
 

@@ -11,7 +11,8 @@ import { NgForm } from "@angular/forms";
 import { Subscription } from "rxjs";
 import { Store } from '@ngrx/store';
 import * as shoppingListActions from '../store/shopping-list.actions'
-import { AppState, State } from '../store/shopping-list.reducer';
+import { AppState } from '../../app.reducer';
+import { State} from '../store/shopping-list.reducer'
 
 @Component({
   selector: "app-shopping-edit",

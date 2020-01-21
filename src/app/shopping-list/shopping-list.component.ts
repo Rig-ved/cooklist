@@ -5,7 +5,7 @@ import { Subscription, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import * as ShoppingListActions from './store/shopping-list.actions'
-import { AppState } from './store/shopping-list.reducer';
+import { AppState } from '../app.reducer';
 @Component({
   selector: 'app-shopping-list',
   templateUrl: './shopping-list.component.html',

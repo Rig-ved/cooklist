@@ -13,7 +13,7 @@ import { EnvServiceProvider } from './env.service.provider';
 import { AuthModule } from './auth/auth/auth.module';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { AppReducer } from './store/app.reducer';
+import { AppReducer } from '../app/app.reducer';
 import { AuthEffects } from './auth/auth/store/auth.effects';
 
 @NgModule({

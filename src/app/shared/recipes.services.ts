@@ -7,7 +7,7 @@ import { map, tap } from 'rxjs/operators';
 import { EnvService } from '../env.service';
 import { Store } from '@ngrx/store';
 import * as shoppingListActions from '../shopping-list/store/shopping-list.actions'
-import { AppState } from '../shopping-list/store/shopping-list.reducer';
+import { AppState } from '../app.reducer';
 
 @Injectable({
     providedIn:'root'

@@ -1,5 +1,5 @@
-import * as fromShoppingList from '../shopping-list/store/shopping-list.reducer'
-import * as fromAuth from '../auth/auth/store/auth.reducer'
+import * as fromShoppingList from '../app/shopping-list/store/shopping-list.reducer'
+import * as fromAuth from './auth/auth/store/auth.reducer'
 import { ActionReducerMap } from '@ngrx/store'
 
 
