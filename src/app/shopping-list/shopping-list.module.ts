@@ -5,10 +5,12 @@ import { Routes, RouterModule } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { SharedModule } from "../shared/shared.module";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { AuthGuard } from '../auth/auth/auth.guard';
 
-const routes: Routes = [
+const slRoutes: Routes = [
   {
-    path: "", //canActivate:[AuthGuard],
+    path: "", 
+    //canActivate:[AuthGuard],
     component: ShoppingListComponent
   }
 ];
@@ -21,7 +23,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule,
     SharedModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(slRoutes),
   ]
 })
 export class shoppingListModule {}

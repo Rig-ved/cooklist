@@ -14,14 +14,14 @@ import { AppState } from '../app.reducer';
 })
 export class ShoppingListComponent implements OnInit {
   ingredients:Observable<{ ingredients: Ingredient[]; }>;
-  private igSubscription:Subscription
+ 
   constructor(
-    private shoppingListServ: shoppingListService,
     private store:Store<AppState>,
     private router:Router) { }
 
   ngOnInit() {
     this.ingredients = this.store.select('shoppingList')
+    this.router.navigate(['/shopping-list'])
     // this.ingredients = this.shoppingListServ.getIngredients();
     // this.igSubscription = this.shoppingListServ.ingredientAdded.subscribe((data:Ingredient[])=>{
     //   if(data) {

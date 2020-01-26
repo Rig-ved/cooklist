@@ -1,13 +1,33 @@
-import { Component, OnInit, OnDestroy, ComponentFactoryResolver, ViewChild } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ComponentFactoryResolver,
+  ViewChild
+} from "@angular/core";
 import { RecipesModel } from "../recipes.model";
 import { RecipeService } from "src/app/shared/recipes.services";
-import { Router, ActivatedRoute } from "@angular/router";
+import {
+  Router,
+  ActivatedRoute,
+  NavigationStart,
+  NavigationEnd,
+  RoutesRecognized
+} from "@angular/router";
 import { Subscription, Subject } from "rxjs";
-import { environment } from "src/environments/environment";
 import { AuthService } from "src/app/auth/auth/auth.service";
 import { UserModel } from "src/app/auth/auth/user.model";
-import { PlaceHolderDirective } from 'src/app/shared/placeholder.directive';
-import { ExampleComponent } from 'src/app/example/example.component';
+import { PlaceHolderDirective } from "src/app/shared/placeholder.directive";
+import { ExampleComponent } from "src/app/example/example.component";
+import { AppState } from "src/app/app.reducer";
+import { Store } from "@ngrx/store";
+import { UserState } from "src/app/auth/auth/store/auth.reducer";
+import { map, filter, pairwise } from "rxjs/operators";
+
+import {
+  BannerInterface,
+  BannerService
+} from "src/app/shared/banner/banner.service";
 
 @Component({
   selector: "app-recipe-list",
@@ -18,21 +38,34 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   recipeAddSubscription: Subscription;
   authSubs: Subscription;
   recipesSubs: Subscription;
+  showAlertComp: boolean = false;
   recipes: RecipesModel[];
+  private routerSubs: Subscription
   recipesLoaded = new Subject<RecipesModel[]>();
-  @ViewChild(PlaceHolderDirective) reference : PlaceHolderDirective
+  @ViewChild(PlaceHolderDirective) reference: PlaceHolderDirective;
   constructor(
     private recipeService: RecipeService,
-    private componentfactory:ComponentFactoryResolver,
+    private bannerService: BannerService,
+    private componentfactory: ComponentFactoryResolver,
     private router: Router,
     private route: ActivatedRoute,
-    private authService: AuthService
-  ) {}
+    private store: Store<AppState>,
+   
+  ) {
+    
+  }
 
   ngOnInit() {
     // SOMEHOW GET THE TOKEN EXPIRATION
-    this.authSubs = this.authService.authenticatedUser.subscribe(
-      (user: UserModel) => {
+      
+    this.authSubs = this.store
+      .select("authList")
+      .pipe(
+        map((authState: UserState) => {
+          return authState.user;
+        })
+      )
+      .subscribe((user: UserModel) => {
         if (!user) {
           return;
         } else {
@@ -40,11 +73,14 @@ export class RecipeListComponent implements OnInit, OnDestroy {
           this.recipeAddSubscription = this.recipeService.recipeAdded.subscribe(
             (data: RecipesModel[]) => {
               this.recipes = data;
+              this.showWelcomeComp(user);
             }
           );
         }
-      }
-    );
+      });
+
+     
+  
   }
 
   onNewRecipeClick() {
@@ -55,17 +91,45 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     if (this.recipeAddSubscription) this.recipeAddSubscription.unsubscribe();
     if (this.authSubs) this.authSubs.unsubscribe();
     if (this.recipesSubs) this.recipesSubs.unsubscribe();
+    if (this.routerSubs) this.routerSubs.unsubscribe();
   }
 
   showWelcomeComp(user) {
-    let alertCompFactory = this.componentfactory.resolveComponentFactory(ExampleComponent)
-    let containerRef = this.reference.vcRef
-    containerRef.clear();
-    const dynamicComp =  containerRef.createComponent(alertCompFactory);
-    dynamicComp.instance.message = `Welcome ${user.email}`
-    let subscription:Subscription=dynamicComp.instance.close.subscribe(()=>{
-        subscription.unsubscribe()
-        containerRef.clear();
-    }) 
+    // CHECK for router navigation start
+    this.router.events
+    .pipe(
+      filter((event: any) => event instanceof RoutesRecognized),
+      
+    )
+    .subscribe((event:RoutesRecognized) => {
+      if (
+        !this.showAlertComp &&
+        event.urlAfterRedirects.indexOf("recipes") != -1
+      ) {
+        
+        this.showAlertComp = true;
+      }
+    });
+    if (!(this.showAlertComp)) {
+      const message: string = "Logged in Successfully";
+      const data: BannerInterface = {
+        message: message,
+        messageType: "success"
+      };
+      this.bannerService.showBanner(data);
+      let alertCompFactory = this.componentfactory.resolveComponentFactory(
+        ExampleComponent
+      );
+      let containerRef = this.reference.vcRef;
+      containerRef.clear();
+      const dynamicComp = containerRef.createComponent(alertCompFactory);
+      dynamicComp.instance.message = `Welcome ${user.email}`;
+      let subscription: Subscription = dynamicComp.instance.close.subscribe(
+        () => {
+          subscription.unsubscribe();
+          containerRef.clear();
+        }
+      );
+    }
   }
 }

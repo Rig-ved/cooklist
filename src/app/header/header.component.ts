@@ -7,6 +7,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AppState } from '../app.reducer';
 import { Store } from '@ngrx/store';
 import * as AuthActions from '../auth/auth/store/auth.actions'
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -15,26 +16,28 @@ import * as AuthActions from '../auth/auth/store/auth.actions'
 })
 export class HeaderComponent implements OnInit,OnDestroy {
 
-  authSubscription: Subscription;
+  userSub: Subscription;
   isAuthenticated:boolean = false;
   
   constructor(
-    private authService:AuthService,
-    private router : Router,
     private store:Store<AppState>,
-    private route:ActivatedRoute,
     private dataStore:DataStorageService) { }
   ngOnInit() {
     // TODO pass from app component where the authorization should be 
-    this.authSubscription  = this.authService.authenticatedUser.subscribe((user:UserModel)=>{
-          this.isAuthenticated = !!user
-    })
+    this.userSub = this.store
+    .select('authList')
+    .pipe(map(authState => authState.user))
+    .subscribe(user => {
+      this.isAuthenticated = !!user;
+      console.log(!user);
+      console.log(!!user);
+    });
   
   }
 
   logout() {
     // this.authService.logout()
-    this.store.dispatch(new AuthActions.Logout())
+    this.store.dispatch(new AuthActions.LogoutAction())
   }
   onSaveDataToDB() {
     this.dataStore.storeRecipes()
@@ -43,6 +46,8 @@ export class HeaderComponent implements OnInit,OnDestroy {
     this.dataStore.fetchRecipes().subscribe()
   }
   ngOnDestroy(): void {
-    this.authSubscription.unsubscribe()
+    if(this.userSub) {
+      this.userSub.unsubscribe()
+    }
   }
 }

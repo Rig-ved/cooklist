@@ -1,9 +1,12 @@
 import { Component, OnInit, ViewChild, OnDestroy } from "@angular/core";
 import { ActivatedRoute, Data, Router } from "@angular/router";
 import { NgForm } from "@angular/forms";
-import { AuthService, AuthResponse } from "./auth.service";
+import { AuthService, AuthResponse, ReqLoginSignUp } from "./auth.service";
 import { Subscription, interval } from "rxjs";
 import { BannerInterface, BannerService } from "src/app/shared/banner/banner.service";
+import { AppState } from 'src/app/app.reducer';
+import { Store } from '@ngrx/store';
+import * as AuthActions from './store/auth.actions'
 
 @Component({
   selector: "app-auth",
@@ -18,6 +21,7 @@ export class AuthComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private authService: AuthService,
     private router: Router,
+    private store:Store<AppState>,
     private bannerService: BannerService
   ) {}
   background: string = "";
@@ -41,40 +45,17 @@ export class AuthComponent implements OnInit, OnDestroy {
     if (!form.valid) {
       return;
     }
-    let message: string = "";
-    if (this.loginMode) {
-      message = "Logged in successfully";
-    } else {
-      message = "User created successfully.Login now";
-    }
+
     const email = form.value.username;
     const password = form.value.password;
-    const data = { email, password, returnSecureToken: true };
-    this.authSubscription = this.authService
-      .signupOrLogin(data, this.loginMode)
-      .subscribe(
-        (response: AuthResponse) => {
-          if (response) {
-            const data: BannerInterface = {
-              message: message,
-              messageType: "success"
-            };
-            this.bannerService.showBanner(data);
-            
-              this.redirectSubscription = interval(1000).subscribe(() => {
-                this.router.navigate(["/recipes"], { relativeTo: this.route });
-              });
-             
-          }
-        },
-        errMsg => {
-          const data: BannerInterface = {
-            message: errMsg,
-            messageType: "error"
-          };
-          this.bannerService.showBanner(data);
-        }
-      );
+    const data:ReqLoginSignUp = { email, password};
+
+    if (this.loginMode) {
+      this.store.dispatch(new AuthActions.LoginStartAction({data}))
+    } else {
+     // message = "User created successfully.Login now";
+      this.store.dispatch(new AuthActions.SignupStartAction(data))
+    }
     this.signForm.resetForm();
   }
   onAuthFormSubmit(form: NgForm,ham:any) {
@@ -122,7 +103,9 @@ export class AuthComponent implements OnInit, OnDestroy {
     this.isForgotPassword = true;
   }
   ngOnDestroy(): void {
-    this.authSubscription.unsubscribe();
-    this.redirectSubscription.unsubscribe();
+    if(this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
+    //this.redirectSubscription.unsubscribe();
   }
 }

@@ -7,11 +7,13 @@ import {
   HttpParams
 } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { tap, take, exhaustMap } from "rxjs/operators";
+import { tap, take, exhaustMap, map } from "rxjs/operators";
 import { AuthService } from "../auth/auth/auth.service";
 import { UserModel } from "../auth/auth/user.model";
 import { SpinnerServcice } from './spinner/spinner.service';
 import { Injectable } from '@angular/core';
+import { AppState } from '../app.reducer';
+import { Store } from '@ngrx/store';
 
 @Injectable({
   providedIn:'root'
@@ -20,6 +22,7 @@ export class LoadingInterceptorService implements HttpInterceptor {
   private numberOfRequests = 0;
   constructor(
     private authService: AuthService,
+    private store:Store<AppState>,
     private spinnerService : SpinnerServcice) {
 
     }
@@ -35,9 +38,12 @@ export class LoadingInterceptorService implements HttpInterceptor {
   ):Observable<HttpEvent<any>> {
     this.numberOfRequests++;
     this.spinnerService.showLoader();
-    return this.authService.authenticatedUser
+    return this.store.select('authList')
       .pipe(
         take(1),
+        map((authState)=>{
+          return authState.user
+        }),
         exhaustMap((user: UserModel) => {
           if(!user) {
             return next.handle(req)
