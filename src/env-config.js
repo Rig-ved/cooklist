@@ -7,6 +7,7 @@
     // Whether or not to enable debug mode
     // Setting this to false will disable console output
     window.__env.enableDebug = true;
+    window.__env.showLoader = true;
 
     window.__env.apiKey="AIzaSyDO9avzbc-NuehPt5EoTr8tQFmyzg7qQF8"
     window.__env.resetPassword="https://identitytoolkit.googleapis.com/v1/accounts:resetPassword"

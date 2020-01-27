@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 export class EnvService {
   public post :string
   public enableDebug:boolean
+  public showLoader:boolean
 
   // token
   public apiKey:string

@@ -189,7 +189,7 @@ export class AuthEffects {
         const expirationDuration =
           new Date(loadedUser._tokenExpirationDate).getTime() -
           new Date().getTime();
-        // this.authService.autoLogout(expirationDuration);
+        this.authService.autoLogout(expirationDuration);
         return handleAutoLogin(autoLoggedInUser, loadedUser);
       }
 

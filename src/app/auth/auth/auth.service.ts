@@ -226,6 +226,7 @@ export class AuthService {
   }
   logout() {
     
+    this.envService.showLoader = true;
     this.ngxIndexedDBService.clear().then(item => {
       () => {
         console.log("successfully cleared all the items", item);
