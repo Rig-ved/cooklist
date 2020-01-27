@@ -17,6 +17,7 @@ import { Store } from "@ngrx/store";
 import { UserState } from "src/app/auth/auth/store/auth.reducer";
 import { map, filter, pairwise } from "rxjs/operators";
 import { EnvService } from 'src/app/env.service';
+import { BannerInterface, BannerService } from 'src/app/shared/banner/banner.service';
 
 
 @Component({
@@ -37,6 +38,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private store: Store<AppState>,
+    private bannerService:BannerService,
     private envService: EnvService
   ) {
     
@@ -80,10 +82,14 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   showWelcomeComp(user) {
-    // CHECK for router navigation start
-    let showAlertComp:boolean = false
-    this.envService.showLoader = false
-    if(!showAlertComp) {
+    //   CHECK for router navigation start
+      this.envService.showLoader = false
+      const message: string = "Logged in Successfully";
+      const data: BannerInterface = {
+        message: message,
+        messageType: "success"
+      };
+      this.bannerService.showBanner(data);
       let alertCompFactory = this.componentfactory.resolveComponentFactory(
         ExampleComponent
       );
@@ -100,5 +106,4 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       );
     }
   
-  }
 }
