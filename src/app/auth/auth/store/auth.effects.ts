@@ -27,6 +27,7 @@ import {
 import { Router, ActivatedRoute } from "@angular/router";
 import { UserModel } from "../user.model";
 import { NgxIndexedDBService } from "ngx-indexed-db";
+import { EnvService } from 'src/app/env.service';
 
 //import all requried services or any dependencies
 
@@ -88,7 +89,8 @@ export class AuthEffects {
     private bannerService: BannerService,
     private router: Router,
     private authService: AuthService,
-    private ngxIndexedDBService: NgxIndexedDBService
+    private ngxIndexedDBService: NgxIndexedDBService,
+    private envService:EnvService
   ) {
     this.ngxIndexedDBService.currentStore = "users";
   }
@@ -186,6 +188,7 @@ export class AuthEffects {
       );
       if (autoLoggedInUser.token) {
         // Replace with ReloadAction
+        this.envService.showLoader= false
         const expirationDuration =
           new Date(loadedUser._tokenExpirationDate).getTime() -
           new Date().getTime();
@@ -246,6 +249,7 @@ export class AuthEffects {
         message: message,
         messageType: "error"
       };
+      this.envService.showLoader = true
       this.bannerService.showBanner(data);
       this.router.navigate(["/login"]);
     })

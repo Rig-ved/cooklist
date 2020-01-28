@@ -6,7 +6,6 @@ import {
   ViewChild
 } from "@angular/core";
 import { RecipesModel } from "../recipes.model";
-import { RecipeService } from "src/app/shared/recipes.services";
 import { Router, ActivatedRoute, NavigationStart, NavigationEnd, RoutesRecognized } from "@angular/router";
 import { Subscription, Subject } from "rxjs";
 import { UserModel } from "src/app/auth/auth/user.model";
@@ -18,6 +17,7 @@ import { UserState } from "src/app/auth/auth/store/auth.reducer";
 import { map, filter, pairwise } from "rxjs/operators";
 import { EnvService } from 'src/app/env.service';
 import { BannerInterface, BannerService } from 'src/app/shared/banner/banner.service';
+import { DataStorageService } from 'src/app/shared/data-store.service';
 
 
 @Component({
@@ -29,17 +29,18 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   recipeAddSubscription: Subscription;
   authSubs: Subscription;
   recipesSubs: Subscription;
-  recipes: RecipesModel[];
+  recipes: RecipesModel[]=[];
   recipesLoaded = new Subject<RecipesModel[]>();
   @ViewChild(PlaceHolderDirective) reference: PlaceHolderDirective;
   constructor(
-    private recipeService: RecipeService,
+    //private recipeService: RecipeService,
     private componentfactory: ComponentFactoryResolver,
     private router: Router,
     private route: ActivatedRoute,
     private store: Store<AppState>,
     private bannerService:BannerService,
-    private envService: EnvService
+    private envService: EnvService,
+    private dataService:DataStorageService,
   ) {
     
   }
@@ -57,16 +58,30 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         if (!user) {
           return;
         } else {
-          this.recipesSubs = this.recipeService.getRecipes().subscribe();
-          this.recipeAddSubscription = this.recipeService.recipeAdded.subscribe(
-            (data: RecipesModel[]) => {
-              this.recipes = data;
-              if(this.envService.showLoader === true) {
-                this.showWelcomeComp(user);
-              }
+          //this.recipesSubs = this.recipeService.getRecipes().subscribe();
+          //this.recipeAddSubscription = this.recipeService.recipeAdded.subscribe
+          // this.recipeAddSubscription = this.recipeService.recipeAdded.subscribe(
+          //   (data: RecipesModel[]) => {
+          //     this.recipes = data;
+          //     if(this.envService.showLoader === true) {
+          //       this.showWelcomeComp(user);
+          //     }
               
-            }
-          );
+          //   }
+          // );
+          this.recipesSubs =  this.dataService.fetchRecipes().subscribe();
+          this.recipeAddSubscription = this.store.select('recipesList').pipe(
+              map((recipesState)=>{
+                  return recipesState.recipes
+              })
+
+          ).subscribe((data:RecipesModel[])=>{
+                this.recipes = data;
+                if(this.envService.showLoader === true) {
+                  this.showWelcomeComp(user);
+                }
+          })
+
         }
       });
   }
@@ -83,7 +98,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   showWelcomeComp(user) {
     //   CHECK for router navigation start
-      this.envService.showLoader = false
+      this.envService.showLoader = false;
       const message: string = "Logged in Successfully";
       const data: BannerInterface = {
         message: message,

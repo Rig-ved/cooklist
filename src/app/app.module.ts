@@ -13,8 +13,10 @@ import { EnvServiceProvider } from './env.service.provider';
 import { AuthModule } from './auth/auth/auth.module';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import {StoreDevtoolsModule} from '@ngrx/store-devtools'
 import { AppReducer } from '../app/app.reducer';
 import { AuthEffects } from './auth/auth/store/auth.effects';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
 	declarations: [
@@ -30,6 +32,7 @@ import { AuthEffects } from './auth/auth/store/auth.effects';
 		NoopAnimationsModule,
 		AppRoutingModule,
 		EffectsModule.forRoot([AuthEffects]),
+		StoreDevtoolsModule.instrument({maxAge:25,logOnly:environment.production}),
 		AuthModule,
 		SharedModule
 	

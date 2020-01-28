@@ -45,7 +45,7 @@ export class RecipeService {
                      return item;
                 })
             }),tap((items:RecipesModel[])=>{
-                    this.setRecipesFromDB(items)
+                   // this.setRecipesFromDB(items)
             })
         )
         // return this.recipes.slice()
