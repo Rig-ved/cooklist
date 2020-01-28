@@ -9,10 +9,13 @@ import {
 } from "@angular/animations";
 import { RecipeService } from "src/app/shared/recipes.services";
 import { ActivatedRoute, Params, Router, Data } from "@angular/router";
-import { map, take } from "rxjs/operators";
+import { map, take, switchMap, exhaustMap, mergeMap } from "rxjs/operators";
 import { AuthService } from "src/app/auth/auth/auth.service";
 import { Subscription, throwError } from "rxjs";
 import { Ingredient } from 'src/app/shared/ingredient.model';
+import { AppState } from 'src/app/app.reducer';
+import { Store } from '@ngrx/store';
+import { RecipesState } from '../store/recipes.reducer';
 
 @Component({
   selector: "app-recipe-detail",
@@ -41,26 +44,34 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     private recipeService: RecipeService,
     private authService: AuthService,
     private route: ActivatedRoute,
+    private store:Store<AppState>,
     private router: Router
   ) {}
 
   ngOnInit() {
-    let id: number;
-    this.selectedRecipeSubs = this.route.params.subscribe((params: Params) => {
-      if (params["id"]) {
-        this.id = params["id"];
-        id = this.id;
-        this.recipeService.getRecipe()
-        this.recipeSub= this.recipeService.recipeSingle.subscribe((recipe:RecipesModel[])=>{
-          if(recipe.length>0) {
-            this.selectedRecipe = recipe.slice()[id]
-          }    
-          
-        })
-       
-        
-      }
-    });
+    //let id: number;
+    debugger
+    this.selectedRecipeSubs = this.route.params.pipe(
+      map( (params:Params) =>{
+        if(params['id'])
+          return +params['id']
+      }),
+      mergeMap((id:number)=>{
+          this.id=id
+          return this.store.select('recipesList')
+      }),
+      map((recipesState:RecipesState)=>{
+          return recipesState.recipes.filter((recipe,index)=>{
+              return index === this.id
+          }).shift()
+      })
+    ).subscribe((recipe:RecipesModel)=>{
+      if(recipe)
+        this.selectedRecipe = recipe
+    })
+    
+    
+    
   }
   ngOnDestroy() {
     if(this.selectedRecipeSubs)

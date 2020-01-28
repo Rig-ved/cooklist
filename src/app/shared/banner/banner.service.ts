@@ -20,6 +20,9 @@ export class BannerService {
         }
         data.showBanner = true;
         this.bannerSubject.next(data);
+        setTimeout(()=>{
+            this.hideBanner()
+        },3000)
     }
 
     hideBanner() {
