@@ -36,7 +36,7 @@ import { RecipesState } from '../store/recipes.reducer';
   ]
 })
 export class RecipeDetailComponent implements OnInit, OnDestroy {
-  selectedRecipe: RecipesModel;
+  selectedRecipe: any;
   id: number;
   selectedRecipeSubs: Subscription;
   recipeSub :Subscription
@@ -49,8 +49,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    //let id: number;
-    debugger
+    let id: number;
     this.selectedRecipeSubs = this.route.params.pipe(
       map( (params:Params) =>{
         if(params['id'])
@@ -65,10 +64,12 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
               return index === this.id
           }).shift()
       })
-    ).subscribe((recipe:RecipesModel)=>{
-      if(recipe)
-        this.selectedRecipe = recipe
-    })
+    ).subscribe((recipe:RecipesModel) => {
+      this.selectedRecipe = recipe
+    });  
+    
+    
+    
     
     
     

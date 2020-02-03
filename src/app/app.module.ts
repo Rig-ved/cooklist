@@ -17,6 +17,7 @@ import {StoreDevtoolsModule} from '@ngrx/store-devtools'
 import { AppReducer } from '../app/app.reducer';
 import { AuthEffects } from './auth/auth/store/auth.effects';
 import { environment } from 'src/environments/environment';
+import { RecipeEffects } from './recipes/store/recipes.effects';
 
 @NgModule({
 	declarations: [
@@ -31,7 +32,7 @@ import { environment } from 'src/environments/environment';
 		HttpClientModule,
 		NoopAnimationsModule,
 		AppRoutingModule,
-		EffectsModule.forRoot([AuthEffects]),
+		EffectsModule.forRoot([AuthEffects,RecipeEffects]),
 		StoreDevtoolsModule.instrument({maxAge:25,logOnly:environment.production}),
 		AuthModule,
 		SharedModule

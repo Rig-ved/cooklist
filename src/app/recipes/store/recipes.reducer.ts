@@ -5,7 +5,7 @@ import * as RecipesActions from '../store/recipes.actions'
 export interface RecipesState {
     recipes:RecipesModel[]
 }
-export const initialState = {
+export const initialState:RecipesState = {
     recipes : []
 }
 export function RecipesReducer(state: RecipesState = initialState ,action: RecipesActions.RecipesActions) {

@@ -10,7 +10,6 @@ export class SetRecipesAction implements Action {
 }
 export class GetRecipeForDetailAction implements Action {
     readonly type  = GET_RECIPE_DETAIL
-    constructor(){}
 }
 
 

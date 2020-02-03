@@ -1,13 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DataStorageService } from '../shared/data-store.service';
-import { AuthService } from '../auth/auth/auth.service';
-import { UserModel } from '../auth/auth/user.model';
 import { Subscription } from 'rxjs';
-import { Router, ActivatedRoute } from '@angular/router';
 import { AppState } from '../app.reducer';
 import { Store } from '@ngrx/store';
 import * as AuthActions from '../auth/auth/store/auth.actions'
 import { map } from 'rxjs/operators';
+import * as RecipeActions from '../recipes/store/recipes.actions'
 
 @Component({
   selector: 'app-header',
@@ -43,7 +41,7 @@ export class HeaderComponent implements OnInit,OnDestroy {
     this.dataStore.storeRecipes()
   }
   fetchRecipesFromDB(){
-    this.dataStore.fetchRecipes().subscribe()
+      this.store.dispatch(new RecipeActions.GetRecipeForDetailAction())
   }
   ngOnDestroy(): void {
     if(this.userSub) {

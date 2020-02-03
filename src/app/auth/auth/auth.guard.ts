@@ -2,7 +2,7 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Rout
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { AuthService, autoLoggedUserModel } from './auth.service';
-import { map, catchError, take, exhaustMap } from 'rxjs/operators';
+import { map, catchError, take, exhaustMap, switchMap } from 'rxjs/operators';
 import { AppState } from 'src/app/app.reducer';
 import { Store } from '@ngrx/store';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
@@ -28,17 +28,16 @@ export class AuthGuard implements CanActivate {
             map(authState => {
                 return authState.user;
             }),
-            exhaustMap( async(user)=>{
+            switchMap( async(user)=>{
                 let userFirst:autoLoggedUserModel[]=[]
                 userFirst = await this.ngxIndexedDBService.getAll();
                 if(userFirst) {
                     isUserFromDB = true
-                    return user
+                    return userFirst
                 }
             }),
 
             map( (user)=>{
-               
                     if(user) {
                         return true
                     } else {

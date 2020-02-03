@@ -11,7 +11,9 @@ import {
   exhaustMap,
   flatMap,
   switchMap,
-  switchMapTo
+  switchMapTo,
+  filter,
+  take
 } from "rxjs/operators";
 import {
   AuthResponse,
@@ -24,10 +26,16 @@ import {
   BannerInterface,
   BannerService
 } from "src/app/shared/banner/banner.service";
-import { Router, ActivatedRoute } from "@angular/router";
+import {
+  Router,
+  ActivatedRoute,
+  NavigationEnd,
+  NavigationStart
+} from "@angular/router";
 import { UserModel } from "../user.model";
 import { NgxIndexedDBService } from "ngx-indexed-db";
-import { EnvService } from 'src/app/env.service';
+import { EnvService } from "src/app/env.service";
+import { AuthActionModels } from "../authAction.model";
 
 //import all requried services or any dependencies
 
@@ -41,6 +49,7 @@ const handleAutoLogin = (resData, loggedInUser) => {
     email: resData.email,
     id: resData.id,
     token: resData.token,
+    redirect: false,
     expirationDate: new Date(loggedInUser._tokenExpirationDate)
   });
 };
@@ -53,6 +62,7 @@ const handleAuthentication = (resData, mode) => {
     return new AuthActions.LoginSuccessAction({
       email: resData.email,
       id: resData.localId,
+      redirect: true,
       token: resData.idToken,
       expirationDate: expirationDate
     });
@@ -88,9 +98,10 @@ export class AuthEffects {
     private action$: Actions,
     private bannerService: BannerService,
     private router: Router,
+    private route: ActivatedRoute,
     private authService: AuthService,
     private ngxIndexedDBService: NgxIndexedDBService,
-    private envService:EnvService
+    private envService: EnvService
   ) {
     this.ngxIndexedDBService.currentStore = "users";
   }
@@ -188,10 +199,11 @@ export class AuthEffects {
       );
       if (autoLoggedInUser.token) {
         // Replace with ReloadAction
-        this.envService.showLoader= false
+        this.envService.showLoader = false;
         const expirationDuration =
           new Date(loadedUser._tokenExpirationDate).getTime() -
           new Date().getTime();
+
         this.authService.autoLogout(expirationDuration);
         return handleAutoLogin(autoLoggedInUser, loadedUser);
       }
@@ -211,8 +223,25 @@ export class AuthEffects {
   @Effect({ dispatch: false })
   autoLoginSuccess = this.action$.pipe(
     ofType(AuthActions.AUTO_LOGIN_SUCCESS),
-    tap(() => {
-      this.router.navigate(["/recipes"]);
+    tap((data: AuthActions.AutoLoginSuccessAction) => {
+      if (data.payload.redirect === true) {
+        this.router.events
+          .pipe(filter(event => event instanceof NavigationStart))
+          .subscribe(event => {
+            console.log(event);
+          });
+      } else {
+        // CHECK FOR MANUAL TYPE OF LOGIN AGAIN
+        this.router.events
+          .pipe(
+            filter(event => event instanceof NavigationStart),
+            take(1)
+          )
+          .subscribe(event => {
+            this.router.navigate([event["url"]]);
+            console.log(event);
+          });
+      }
     })
   );
 
@@ -249,7 +278,7 @@ export class AuthEffects {
         message: message,
         messageType: "error"
       };
-      this.envService.showLoader = true
+      this.envService.showLoader = true;
       this.bannerService.showBanner(data);
       this.router.navigate(["/login"]);
     })
