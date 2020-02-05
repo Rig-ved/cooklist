@@ -111,7 +111,7 @@ export class AuthEffects {
   @Effect()
   login = this.action$.pipe(
     ofType<AuthActions.LoginStartAction>(AuthActions.LOGIN_START),
-    mergeMap((authData: AuthActions.LoginStartAction) => {
+    switchMap((authData: AuthActions.LoginStartAction) => {
       const data = {
         email: authData.payload.data.email,
         password: authData.payload.data.password,

@@ -12,6 +12,7 @@ export const LOGOUT = "[Auth] LOGOUT";
 export const AUTO_LOGIN = "[Auth] Auto Login";
 export const AUTO_LOGIN_SUCCESS = "[Auth] Auto Login Success"
 
+
 export class LoginSuccessAction implements Action {
   readonly type = LOGIN_SUCCESS;
   constructor(public payload: AuthActionModels) {}

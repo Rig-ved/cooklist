@@ -16,6 +16,8 @@ import { Ingredient } from 'src/app/shared/ingredient.model';
 import { AppState } from 'src/app/app.reducer';
 import { Store } from '@ngrx/store';
 import { RecipesState } from '../store/recipes.reducer';
+import { deleteRecipeAction } from '../store/recipes.actions';
+import { AddIngredientsFromRecipes } from 'src/app/shopping-list/store/shopping-list.actions';
 
 @Component({
   selector: "app-recipe-detail",
@@ -81,15 +83,17 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.recipeSub.unsubscribe()
   }
   addToShoppingList() {
-    this.recipeService.addIngredientsToShoppingList(
-      (this.selectedRecipe.ingredients) as Ingredient[]
-    );
+    // this.recipeService.addIngredientsToShoppingList(
+    //   (this.selectedRecipe.ingredients) as Ingredient[]
+    // );
+    this.store.dispatch(new AddIngredientsFromRecipes(this.selectedRecipe.ingredients as Ingredient[]))
   }
   onEditRecipe() {
     this.router.navigate(["edit"], { relativeTo: this.route });
   }
   onDeleteRecipe() {
-    this.recipeService.deleteRecipe(this.id);
+    this.store.dispatch(new deleteRecipeAction(this.id))
+    // this.recipeService.deleteRecipe(this.id);
     this.router.navigate(["/recipes"], { relativeTo: this.route });
   }
 }

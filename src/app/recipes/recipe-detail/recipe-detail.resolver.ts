@@ -26,28 +26,35 @@ import { RecipesModel } from "../recipes.model";
 import { AppState } from "src/app/app.reducer";
 import { Store } from "@ngrx/store";
 import { RecipesState } from "../store/recipes.reducer";
-import { map, tap, take } from "rxjs/operators";
-import { Observable } from 'rxjs';
-import * as RecipeActions from '../store/recipes.actions'
-import { Actions, ofType } from '@ngrx/effects';
+import { map, tap, take, switchMap } from "rxjs/operators";
+import { Observable, of } from "rxjs";
+import * as RecipeActions from "../store/recipes.actions";
+import { Actions, ofType } from "@ngrx/effects";
 
 @Injectable({ providedIn: "root" })
 export class RecipeDetailResolver implements Resolve<RecipesModel[]> {
-  constructor(private store: Store<AppState>,private actions$:Actions) {}
+  constructor(private store: Store<AppState>, private actions$: Actions) {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-      // return this.dataStorageService.fetchRecipes()
-      this.store.dispatch(new RecipeActions.GetRecipeForDetailAction());
-      return this.actions$.pipe(
-        ofType(RecipeActions.SET_RECIPES),
-        take(1)
-      )
-
+    // return this.dataStorageService.fetchRecipes()
+    return this.store.select("recipesList").pipe(
+      take(1),
+      map((recipesState: RecipesState) => {
+        return recipesState.recipes;
+      }),
+      switchMap((recipes: RecipesModel[]) => {
+        if (recipes.length == 0) {
+          this.store.dispatch(new RecipeActions.GetRecipeForDetailAction());
+          return this.actions$.pipe(ofType(RecipeActions.SET_RECIPES), take(1));
+        } else {
+          return of(recipes)
+        }
+      })
+    );
   }
 }
 
 // Resolver espects an Observable as a return value on the resolve method here on the resolver
 // and it waits for the obs to complete before it loads the route for which u added the resolver
 // the problem is when we dispatch an action we dont get back  an  observable , therefore resolve would
-// instantly resolve and we would load the route instantly where the data isnt there yet 
-
+// instantly resolve and we would load the route instantly where the data isnt there yet

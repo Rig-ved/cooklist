@@ -21,6 +21,7 @@ import { AppState } from 'src/app/app.reducer';
 import { Store } from '@ngrx/store';
 import { RecipesState } from '../store/recipes.reducer';
 import { Subscription } from 'rxjs';
+import { addRecipeAction, updateRecipeAction } from '../store/recipes.actions';
 
 @Component({
   selector: "app-recipe-edit",
@@ -119,9 +120,14 @@ export class RecipeEditComponent implements OnInit,OnDestroy {
   }
   onSubmit() {
     if(this.editMode){
-        this.recipeService.updateRecipes(this.id,this.recipeForm.value)
+          this.store.dispatch(new updateRecipeAction({
+            index: this.id,
+            newRecipe:this.recipeForm.value}
+          ))
+        // this.recipeService.updateRecipes(this.id,this.recipeForm.value)
     } else {
-        this.recipeService.addRecipes(this.recipeForm.value)
+        this.store.dispatch(new addRecipeAction(this.recipeForm.value))
+        // this.recipeService.addRecipes(this.recipeForm.value)
     }
     this.onCancelRecipe()
   }
